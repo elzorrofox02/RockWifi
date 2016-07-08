@@ -5,7 +5,7 @@ import cgi,os,sys,time
 from subprocess import Popen, PIPE, check_output
 import socket
 
-PORT_NUMBER = 8080
+PORT_NUMBER = 80
 ssl_port = 443
 IP = "192.168.0.1"
 ips = "192.168.0"
@@ -279,7 +279,7 @@ def inic():
 		sys.exit()
 	if hola == "1":
 		try:
-			server = HTTPServer(('192.168.0.104', PORT_NUMBER), myHandler)
+			server = HTTPServer(('', PORT_NUMBER), myHandler)
 			print 'Started httpserver on port ' , PORT_NUMBER
 			server.serve_forever()
 		except KeyboardInterrupt:
