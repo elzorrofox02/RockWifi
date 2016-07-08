@@ -266,8 +266,7 @@ def inic():
 	print G+'3)'+W+' configurar iptables'
 	print G+'4)'+W+' borrar configuraciones'
 	print G+'5)'+W+' Crear fake ap'
-	print G+'6)'+W+' Crear fake ap2'
-	print G+'7)'+W+' Crear fake ap3'
+	print G+'6)'+W+' Crear fake ap2'	
 	print G+'10)'+W+' Salir'
 	print G+'11)'+W+' pruebas'
 	modulosparaIntall().get_hostapd()
