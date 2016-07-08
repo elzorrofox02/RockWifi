@@ -14,13 +14,11 @@ class Dependecias():
 			tubo = Popen([com4],shell=True,stdout=PIPE, stderr=PIPE,stdin=PIPE)
 			stdout,stderr = tubo.communicate()
 			if 'Installed' in str(stdout):
-				#print "Installed %s"%i
-				print G+'[+]'+W+' Installed %s'%i									
-			else:				
-				#print "Not Install %s"%i
+				pass				
+				#print G+'[+]'+W+' Installed %s'%i									
+			else:			
 				print R+'[+]'+W+' Not Install %s'%i
-				self.numeros = self.numeros +1	
-				
+				self.numeros = self.numeros +1				
 		if self.numeros >0:
 			self.ActualizarDepe()
 
@@ -33,7 +31,7 @@ class Dependecias():
 				if 'Installed' in str(stdout):
 					print "Installed %s"%i				
 				else:
-					print "Not Install %s"%i
+					print R+'[+]'+W+' Not Install %s'%i
 					if i == "dhcpd":
 						os.system("apt-get --yes install %s"%i)
 					else:
@@ -44,4 +42,3 @@ class Dependecias():
 		os.system('apt-get update -m')
 		os.system('apt-get install')	
 		self.installDepedencias()
-
