@@ -1,0 +1,7 @@
+echo -ne "lighttpdss "
+if ! hash iwconfig 2>/dev/null; then
+	echo -e "No instalado"
+else
+	echo -e "OKKKKK"
+fi
+sleep 0.025
