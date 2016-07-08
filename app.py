@@ -243,15 +243,7 @@ class modulosparaIntall:
 
 def inic():   
     print G+'By JR'+W   
-    print '---------------'
-    print "               _  __ _       _     _     _               "
-    print "              (_)/ _(_)     | |   (_)   | |              "
-    print "     __      ___| |_ _ _ __ | |__  _ ___| |__   ___ _ __ "
-    print "     \ \ /\ / / |  _| | '_ \| '_ \| / __| '_ \ / _ \ '__|"
-    print "      \ V  V /| | | | | |_) | | | | \__ \ | | |  __/ |   "
-    print "       \_/\_/ |_|_| |_| .__/|_| |_|_|___/_| |_|\___|_|   "
-    print "                      | |                                "
-    print "                      |_|                                "
+    print '---------------'  
     print G+'1)'+W+' Server simple'
     print G+'2)'+W+' configurar routes'
     print G+'3)'+W+' configurar iptables'
