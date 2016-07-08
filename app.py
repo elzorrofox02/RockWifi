@@ -218,7 +218,7 @@ class Forwaid:
 		#Creo el Dhcp y dns
 		Popen(['xterm','-e','dnsmasq', '-C', ''+DUMP_PATH+'/dns.conf','--no-daemon','--log-queries'], stdout=PIPE, stderr=DN)
 		#Creo el Lihttp
-		os.system('lighttpd -f '+DUMP_PATH+'/liphp2.conf')      
+		os.system('lighttpd -f '+DUMP_PATH+'/lighttpd.conf')      
 
 	def creaFakeApF2(self):
 		self.detenerservicion()
@@ -227,7 +227,7 @@ class Forwaid:
 		self.crearHttp()
 
 		#Creo Lihhtpd
-		os.system('lighttpd -f '+DUMP_PATH+'/liphp2.conf')
+		os.system('lighttpd -f '+DUMP_PATH+'/lighttpd.conf')
 
 		#Creo Fake Ap
 		Popen(['xterm','-e', 'hostapd', ''+DUMP_PATH+'/hostapd.conf'], stdout=DN, stderr=DN)
@@ -274,8 +274,8 @@ def inic():
 	try:
 		hola = raw_input("Seleciona options>: ")
 	except KeyboardInterrupt:
-	Forwaid().detenerservicion()
-	Forwaid().borrarconf()
+		Forwaid().detenerservicion()
+		Forwaid().borrarconf()
 		os.system("clear")
 		sys.exit()
 	if hola == "1":
