@@ -275,7 +275,7 @@ def inic():
 	print G+'6)'+W+' Crear fake ap2'	
 	print G+'10)'+W+' Salir'
 	print G+'11)'+W+' pruebas'
-	modulosparaIntall().get_hostapd()
+	modulosparaIntall()
 	try:
 		hola = raw_input("Seleciona options>: ")
 	except KeyboardInterrupt:

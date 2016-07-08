@@ -5,6 +5,8 @@ class Dependecias():
 	def __init__(self):		
 		self.numeros = 0
 		self.VerificarDepen()
+
+		print G+'[+]'
 		
 	def VerificarDepen(self):		
 		lib = ["hostapd","dhcpd","lighttpd","iwconfig","rfkill","xterm","aireplay-ng","airodump-ng"]
@@ -42,4 +44,3 @@ class Dependecias():
 		os.system('apt-get install')	
 		self.installDepedencias()
 
-print "hla"
