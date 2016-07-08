@@ -6,6 +6,7 @@ from subprocess import Popen, PIPE, check_output
 import socket
 from depen import Dependecias
 from colors import *
+import shutil
 
 PORT_NUMBER = 80
 ssl_port = 443

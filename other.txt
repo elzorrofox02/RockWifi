@@ -20,3 +20,4 @@ deb http://security.debian.org/ jessie/updates main contrib non-free
 leafpad /etc/apt/sources.list	
 
 dpkg -l |grep hostapd
+git reset --hard
