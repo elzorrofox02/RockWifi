@@ -1,0 +1,20 @@
+kali bloquea 	
+	sudo nmcli radio wifi off
+	sudo rfkill unblock wlan
+	ifconfig wlan0 up
+	NetworkManager stop
+
+	apt-get install isc-dhcp-server
+
+	apt-get install Php5-cgi
+
+	apt-get install Hostapd
+
+	apt-get install Lighttpd
+
+
+	deb http://ftp.de.debian.org/debian testing main contrib non-free
+deb http://ftp.debian.org/debian/ jessie-updates main contrib non-free
+deb http://security.debian.org/ jessie/updates main contrib non-free
+
+leafpad /etc/apt/sources.list	
