@@ -168,12 +168,19 @@ class Forwaid:
 		 'range '+RANG_IP+'.100 '+RANG_IP+'.250;\n'         
 		 '}'
 		)   
+		configHosts=(
+			'192.168.0.1 *'
+		)		
 		
 		with open(DUMP_PATH+'/hostapd.conf', 'w') as apconf:
 			apconf.write(configAp % (interface, Host_SSID, Host_CHAN))
 			
 		with open(DUMP_PATH+'/dhcpd.conf', 'w') as dhcpconf:           
-			dhcpconf.write(configDhcp2)      
+			dhcpconf.write(configDhcp2) 
+
+		with open(DUMP_PATH+'/hosts.conf', 'w') as hostss:           
+			hostss.write(configHosts)
+
 		
 	def Dns(self):
 		
