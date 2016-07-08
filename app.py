@@ -16,21 +16,15 @@ DHCP_LEASE = "192.168.0.2,192.168.0.254,12h"
 RANG_IP = ips
 DUMP_PATH="/tmp/RockWifi"
 ACTUAL_PATH = os.getcwd()
-
 webs = os.path.join(ACTUAL_PATH,"data")
+print webs
 
 interface = "wlan0"
 Host_SSID = "Roque"
 Host_CHAN = "6"
 DN = open(os.devnull, 'w')
 
-
-
-
-#This class will handles any incoming request from
-#the browser 
-class myHandler(BaseHTTPRequestHandler):
-	#Handler for the GET requests
+class myHandler(BaseHTTPRequestHandler):	
 	def do_GET(self):
 		print "pide algo"
 		"""
@@ -105,7 +99,7 @@ class Forwaid:
 		os.system('pkill hostapd')
 		os.system('pkill lighttpd')
 		os.system('killall -9 dnsmasq')
-		#os.system("kill $(ps a | grep python| grep fakedns | awk '{print $1}'")
+		os.system("kill $(ps a | grep python| grep fakedns | awk '{print $1}'")
 		Popen(['airmon-ng','stop', interface], stdout=DN, stderr=DN)         
 		Popen(['service','stop', 'networkmanager'], stdout=DN, stderr=DN)
 		os.system('echo "0" > /proc/sys/net/ipv4/ip_forward')        
@@ -120,9 +114,9 @@ class Forwaid:
 	def reiniciar(self):
 		#os.system('service restart networkmanager')
 		os.system('killall xterm')
+		shutil.rmtree(DUMP_PATH, True)
 
 	def crearHttp(self):
-
 		configHttp=(
 		'server.document-root = "'+DUMP_PATH+'/data"\n'
 		'server.modules = ("mod_access","mod_alias","mod_accesslog","mod_fastcgi","mod_redirect","mod_rewrite")\n'
@@ -144,8 +138,7 @@ class Forwaid:
 		with open(''+DUMP_PATH+'/lighttpd.conf', 'w') as httpconfig:
 			httpconfig.write(configHttp)  	 
 		
-	def confFakeapydhcp(self):        
-		#forma 2
+	def confFakeapydhcp(self):	
 		configAp = (
 		'interface=%s\n'
 		'driver=nl80211\n'
@@ -216,7 +209,6 @@ class Forwaid:
 		self.conf()
 		self.confFakeapydhcp()
 		self.crearHttp()
-
 		#Creo Lihhtpd
 		os.system('lighttpd -f '+DUMP_PATH+'/lighttpd.conf')
 		#Creo Fake Ap
@@ -272,8 +264,8 @@ def inic():
 	except KeyboardInterrupt:
 		Forwaid().detenerservicion()
 		Forwaid().borrarconf()
-		#os.system("clear")
-		shutil.rmtree(DUMP_PATH, True)		
+		Forwaid.reiniciar()
+		os.system("clear")				
 		sys.exit()
 	if hola == "1":
 		try:
@@ -300,7 +292,7 @@ def inic():
 		vamos = Forwaid()
 		vamos.borrarconf()
 		vamos.detenerservicion()
-		vamos.reiniciar()
+		vamos.reiniciar()		
 		sys.exit()
 	elif hola == "11":
 		pass		
