@@ -265,7 +265,7 @@ def inic():
 	except KeyboardInterrupt:
 		Forwaid().detenerservicion()
 		Forwaid().borrarconf()
-		Forwaid.reiniciar()
+		Forwaid().reiniciar()
 		os.system("clear")				
 		sys.exit()
 	if hola == "1":
