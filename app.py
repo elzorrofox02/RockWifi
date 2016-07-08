@@ -21,6 +21,8 @@ Host_CHAN = "6"
 DN = open(os.devnull, 'w')
 
 
+
+
 #This class will handles any incoming request from
 #the browser 
 class myHandler(BaseHTTPRequestHandler):
@@ -267,6 +269,11 @@ def inic():
 	print G+'6)'+W+' Crear fake ap2'	
 	print G+'10)'+W+' Salir'
 	print G+'11)'+W+' pruebas'
+
+	if os.path.exists("/tmp/RockWifi/"):
+		pass
+	else:
+		os.mkdir("/tmp/RockWifi/")
 	modulosparaIntall()
 	try:
 		hola = raw_input("Seleciona options>: ")
