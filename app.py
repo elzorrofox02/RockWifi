@@ -16,8 +16,9 @@ DHCP_LEASE = "192.168.0.2,192.168.0.254,12h"
 RANG_IP = ips
 DUMP_PATH="/tmp/RockWifi"
 ACTUAL_PATH = os.getcwd()
-webs = os.path.join(ACTUAL_PATH,"data")
-print webs
+#print ACTUAL_PATH
+#webs = os.path.join(ACTUAL_PATH)
+#print webs
 
 interface = "wlan0"
 Host_SSID = "Roque"
@@ -118,7 +119,7 @@ class Forwaid:
 
 	def crearHttp(self):
 		configHttp=(
-		'server.document-root = "'+DUMP_PATH+'/data"\n'
+		'server.document-root = "'+ACTUAL_PATH+'/data"\n'
 		'server.modules = ("mod_access","mod_alias","mod_accesslog","mod_fastcgi","mod_redirect","mod_rewrite")\n'
 
 		'fastcgi.server = ( ".php" => (("bin-path" => "/usr/bin/php-cgi","socket" => "/php.socket")))\n'
