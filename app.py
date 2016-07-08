@@ -199,7 +199,11 @@ class Forwaid:
         except KeyboardInterrupt:
             print "keyboar"
         #Creo Dhcp
-        Popen(['xterm','-e', 'dhcpd','-d','-f','-cf' ,'/root/Desktop/jr/dhcpd.conf','wlan0'], stdout=DN, stderr=DN)
+        Popen(['xterm','-e', 'dhcpd','-d','-f','-cf' ,''+DUMP_PATH+'/dhcpd.conf','wlan0'], stdout=DN, stderr=DN)
+
+        #Creo Dns
+        Popen(['xterm','-title', 'FAKEDNS','-e','python','-cf' ,''+DUMP_PATH+'/fakedns.py'], stdout=DN, stderr=DN)
+        
         #Creo Lihhtpd
         os.system('lighttpd -f '+DUMP_PATH+'/liphp2.conf')
 
@@ -226,6 +230,7 @@ def inic():
     print G+'3)'+W+' configurar iptables'
     print G+'4)'+W+' borrar configuraciones'
     print G+'5)'+W+' Crear fake ap'
+    print G+'6)'+W+' Crear fake ap2'
     print G+'10)'+W+' Salir'
     print G+'11)'+W+' pruebas'
     modulosparaIntall().get_hostapd()
