@@ -138,11 +138,12 @@ class Forwaid:
 		'index-file.names = ( "index.htm" )\n'
 		'$HTTP["host"] =~ "^www\.(.*)$" {\n'
 		'url.redirect = ( "^/(.*)" => "http://%1/$1" )\n'
-		'}' 
+		'}'
+		)
 
 		with open(''+DUMP_PATH+'/lighttpd.conf', 'w') as httpconfig:
 			httpconfig.write(configHttp)  
-		)      
+	 
 		
 	def confFakeapydhcp(self):        
 		#forma 2
@@ -168,9 +169,9 @@ class Forwaid:
 		 'range '+RANG_IP+'.100 '+RANG_IP+'.250;\n'         
 		 '}'
 		)   
-		configHosts=(
+		configHosts = (
 			'192.168.0.1 *'
-		)		
+		)
 		
 		with open(DUMP_PATH+'/hostapd.conf', 'w') as apconf:
 			apconf.write(configAp % (interface, Host_SSID, Host_CHAN))
@@ -242,7 +243,7 @@ class Forwaid:
 		Popen(['xterm','-e','python',''+DUMP_PATH+'/fakedns.py'], stdout=DN, stderr=DN)
 		
 		
-class modulosparaIntall:    
+class modulosparaIntall:
 	def get_hostapd(self):
 		if not os.path.isfile('/usr/sbin/hostapd'):
 			install = raw_input(
