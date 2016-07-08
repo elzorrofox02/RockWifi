@@ -168,7 +168,7 @@ class Forwaid:
 		 'option domain-name-servers '+IP+';\n'
 		 'range '+RANG_IP+'.100 '+RANG_IP+'.250;\n'         
 		 '}'
-		)   
+		)
 		configHosts = (
 			'192.168.0.1 *'
 		)
@@ -306,8 +306,7 @@ def inic():
 		vamos.reiniciar()
 		sys.exit()
 	elif hola == "11":
-		pass
-		 
+		pass		
 	inic()
 
 if __name__ == "__main__":
