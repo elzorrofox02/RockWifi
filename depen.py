@@ -1,12 +1,11 @@
 from subprocess import Popen,PIPE,check_output
 import os
+from colors import *
 
 class Dependecias():
 	def __init__(self):		
 		self.numeros = 0
 		self.VerificarDepen()
-
-		print G+'[+]'
 		
 	def VerificarDepen(self):		
 		lib = ["hostapd","dhcpd","lighttpd","iwconfig","rfkill","xterm","aireplay-ng","airodump-ng"]
@@ -15,9 +14,11 @@ class Dependecias():
 			tubo = Popen([com4],shell=True,stdout=PIPE, stderr=PIPE,stdin=PIPE)
 			stdout,stderr = tubo.communicate()
 			if 'Installed' in str(stdout):
-				print "Installed %s"%i									
+				#print "Installed %s"%i
+				print G+'[+]'+W+' Installed %s'%i									
 			else:				
-				print "Not Install %s"%i
+				#print "Not Install %s"%i
+				print R+'[+]'+W+' Not Install %s'%i
 				self.numeros = self.numeros +1	
 				
 		if self.numeros >0:
