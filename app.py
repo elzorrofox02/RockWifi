@@ -14,6 +14,9 @@ ips = "192.168.0"
 DHCP_LEASE = "192.168.0.2,192.168.0.254,12h"
 RANG_IP = ips
 DUMP_PATH="/tmp/RockWifi"
+ACTUAL_PATH = os.getcwd()
+
+webs = os.path.join(ACTUAL_PATH,"data")
 
 interface = "wlan0"
 Host_SSID = "Roque"
@@ -269,7 +272,7 @@ def inic():
 		Forwaid().detenerservicion()
 		Forwaid().borrarconf()
 		#os.system("clear")
-		os.rmdir(DUMP_PATH)
+		shutil.rmtree(DUMP_PATH, True)		
 		sys.exit()
 	if hola == "1":
 		try:
