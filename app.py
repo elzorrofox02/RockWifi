@@ -68,7 +68,8 @@ class myHandler(BaseHTTPRequestHandler):
 		return
 
 class Forwaid:
-	def conf(self):        
+	def conf(self):
+		os.system('rfkill unblock wlan')      
 		os.system('ifconfig %s down' % interface)
 		os.system('ifconfig %s %s netmask 255.255.255.0' %(interface,IP))        
 		os.system('ifconfig %s up' % interface)        
@@ -100,7 +101,7 @@ class Forwaid:
 		os.system('pkill hostapd')
 		os.system('pkill lighttpd')
 		os.system('killall -9 dnsmasq')
-		os.system("kill $(ps a | grep python| grep fakedns | awk '{print $1}'")		            
+		#os.system("kill $(ps a | grep python| grep fakedns | awk '{print $1}'")
 		Popen(['airmon-ng','stop', interface], stdout=DN, stderr=DN)         
 		Popen(['service','stop', 'networkmanager'], stdout=DN, stderr=DN)
 		os.system('echo "0" > /proc/sys/net/ipv4/ip_forward')        
@@ -136,10 +137,8 @@ class Forwaid:
 		'url.redirect = ( "^/(.*)" => "http://%1/$1" )\n'
 		'}'
 		)
-
 		with open(''+DUMP_PATH+'/lighttpd.conf', 'w') as httpconfig:
-			httpconfig.write(configHttp)  
-	 
+			httpconfig.write(configHttp)  	 
 		
 	def confFakeapydhcp(self):        
 		#forma 2
@@ -151,8 +150,7 @@ class Forwaid:
 		'channel=%s\n'
 		'macaddr_acl=0\n'
 		'ignore_broadcast_ssid=0\n'
-		)        
-	   
+		)	   
 		configDhcp2 = (
 		 'authoritative;\n' 
 		 'default-lease-time 600;\n'
@@ -167,8 +165,7 @@ class Forwaid:
 		)
 		configHosts = (
 			'192.168.0.1 *'
-		)
-		
+		)		
 		with open(DUMP_PATH+'/hostapd.conf', 'w') as apconf:
 			apconf.write(configAp % (interface, Host_SSID, Host_CHAN))
 			
@@ -178,9 +175,7 @@ class Forwaid:
 		with open(DUMP_PATH+'/hosts.conf', 'w') as hostss:           
 			hostss.write(configHosts)
 
-		
-	def Dns(self):
-		
+	def Dns(self):		
 		config = (
 		'no-resolv\n'
 		'interface=%s\n'
@@ -188,9 +183,7 @@ class Forwaid:
 		'address=/#/%s'
 		)        
 		with open(''+DUMP_PATH+'/dns.conf', 'w') as dhcpconf:
-			dhcpconf.write(config % (interface, DHCP_LEASE, IP))
-			
-		path = DUMP_PATH+'/dns.conf'
+			dhcpconf.write(config % (interface, DHCP_LEASE, IP))		
 		os.system('echo > /var/lib/misc/dnsmasq.leases')
 
 	def escaner(self):
@@ -202,15 +195,13 @@ class Forwaid:
 		self.conf()
 		self.confFakeapydhcp()
 		self.Dns()
-		self.crearHttp()     
-	   
+		self.crearHttp()	   
 		#Creo el Ap falso
 		Popen(['xterm','-e', 'hostapd', ''+DUMP_PATH+'/hostapd.conf'], stdout=DN, stderr=DN)
 		try:
 			time.sleep(6)
 		except KeyboardInterrupt:
-			print "keyboar"      
-				 
+			print "keyboar"				 
 		#Creo el Dhcp y dns
 		Popen(['xterm','-e','dnsmasq', '-C', ''+DUMP_PATH+'/dns.conf','--no-daemon','--log-queries'], stdout=PIPE, stderr=DN)
 		#Creo el Lihttp
@@ -224,7 +215,6 @@ class Forwaid:
 
 		#Creo Lihhtpd
 		os.system('lighttpd -f '+DUMP_PATH+'/lighttpd.conf')
-
 		#Creo Fake Ap
 		Popen(['xterm','-e', 'hostapd', ''+DUMP_PATH+'/hostapd.conf'], stdout=DN, stderr=DN)
 		try:
@@ -233,14 +223,12 @@ class Forwaid:
 			print "keyboar"
 		#Creo Dhcp
 		Popen(['xterm','-e', 'dhcpd','-d','-f','-cf' ,''+DUMP_PATH+'/dhcpd.conf','wlan0'], stdout=DN, stderr=DN)
-
 		#Creo Dns
 		#Popen(['xterm','-title', 'FAKEDNS','-e','python','-cf' ,''+DUMP_PATH+'/fakedns.py'], stdout=DN, stderr=DN)
 		Popen(['xterm','-e','python',''+DUMP_PATH+'/fakedns.py'], stdout=DN, stderr=DN)
 		
 		
 class modulosparaIntall:
-
 	def __init__(self):
 		veryy = Dependecias()
 		
@@ -270,17 +258,18 @@ def inic():
 	print G+'10)'+W+' Salir'
 	print G+'11)'+W+' pruebas'
 
-	if os.path.exists("/tmp/RockWifi/"):
+	if os.path.exists(DUMP_PATH):
 		pass
 	else:
-		os.mkdir("/tmp/RockWifi/")
+		os.mkdir(DUMP_PATH)
 	modulosparaIntall()
 	try:
 		hola = raw_input("Seleciona options>: ")
 	except KeyboardInterrupt:
 		Forwaid().detenerservicion()
 		Forwaid().borrarconf()
-		os.system("clear")
+		#os.system("clear")
+		os.rmdir(DUMP_PATH)
 		sys.exit()
 	if hola == "1":
 		try:
