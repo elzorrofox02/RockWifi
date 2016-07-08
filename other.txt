@@ -1,0 +1,1 @@
+kill \$(ps a | grep python| grep fakedns | awk '{print \$1}') &>$flux_output_device

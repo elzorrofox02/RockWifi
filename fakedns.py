@@ -10,9 +10,9 @@ class DNSQuery:
 			ini=12
 			lon=ord(data[ini])
 			while lon != 0:
-		self.dominio+=data[ini+1:ini+lon+1]+'.'
-		ini+=lon+1
-		lon=ord(data[ini])
+				self.dominio+=data[ini+1:ini+lon+1]+'.'
+				ini+=lon+1
+				lon=ord(data[ini])
 
 	def respuesta(self, ip):
 		packet = ''
