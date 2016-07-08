@@ -244,6 +244,11 @@ class Forwaid:
 		
 		
 class modulosparaIntall:
+
+	def __init__(self):
+		cmd2 = os.system("echo '# Kali linux repositories | Added by Katoolin\ndeb http://http.kali.org/kali kali-rolling main contrib non-free\ndeb http://repo.kali.org/kali kali-bleeding-edge main' >> /etc/apt/sources.list")
+		Popen(['xterm','-e','apt-get','update'], stdout=DN, stderr=DN)
+		Popen(['xterm','-e','apt-get','install'], stdout=DN, stderr=DN)
 	def get_hostapd(self):
 		if not os.path.isfile('/usr/sbin/hostapd'):
 			install = raw_input(
