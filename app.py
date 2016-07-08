@@ -4,6 +4,7 @@ from os import curdir, sep
 import cgi,os,sys,time
 from subprocess import Popen, PIPE, check_output
 import socket
+from depen import Dependecias
 
 PORT_NUMBER = 80
 ssl_port = 443
@@ -11,7 +12,7 @@ IP = "192.168.0.1"
 ips = "192.168.0"
 DHCP_LEASE = "192.168.0.2,192.168.0.254,12h"
 RANG_IP = ips
-DUMP_PATH = "/root/Escritorio/RockWifi"
+DUMP_PATH="/tmp/RockWifi"
 
 interface = "wlan0"
 Host_SSID = "Roque"
@@ -104,7 +105,8 @@ class Forwaid:
 		os.system('pkill dnsmasq')
 		os.system('pkill hostapd')
 		os.system('pkill lighttpd')
-		os.system('killall -9 dnsmasq')              
+		os.system('killall -9 dnsmasq')
+		os.system("kill $(ps a | grep python| grep fakedns | awk '{print $1}'")		            
 		Popen(['airmon-ng','stop', interface], stdout=DN, stderr=DN)         
 		Popen(['service','stop', 'networkmanager'], stdout=DN, stderr=DN)
 		os.system('echo "0" > /proc/sys/net/ipv4/ip_forward')        
@@ -246,9 +248,8 @@ class Forwaid:
 class modulosparaIntall:
 
 	def __init__(self):
-		cmd2 = os.system("echo '# Kali linux repositories | Added by Katoolin\ndeb http://http.kali.org/kali kali-rolling main contrib non-free\ndeb http://repo.kali.org/kali kali-bleeding-edge main' >> /etc/apt/sources.list")
-		Popen(['xterm','-e','apt-get','update'], stdout=DN, stderr=DN)
-		Popen(['xterm','-e','apt-get','install'], stdout=DN, stderr=DN)
+		veryy = Dependecias()
+		
 	def get_hostapd(self):
 		if not os.path.isfile('/usr/sbin/hostapd'):
 			install = raw_input(

@@ -41,3 +41,5 @@ class Dependecias():
 		os.system('apt-get update -m')
 		os.system('apt-get install')	
 		self.installDepedencias()
+
+print "hla"
