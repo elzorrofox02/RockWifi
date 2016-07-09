@@ -21,3 +21,18 @@ leafpad /etc/apt/sources.list
 
 dpkg -l |grep hostapd
 git reset --hard
+https://github.com/derv82/wifite/blob/master/wifite.py
+
+
+
+# let's say the Airodump's file is called "temp.cap-01.txt" :
+capFile= open( "temp.cap-01.txt", "r" )
+# headers to get rid of:
+s1 = ( "BSSID, First time" )
+s2 = ( "Station MAC, Firs" )
+for line in capFile:
+# get rid of the headers:
+        if not line.rfind(s1) != -1 and  not line.rfind(s2) != -1:          
+#print first 16 chars:
+            print  line[0:17]
+capFile.close()
