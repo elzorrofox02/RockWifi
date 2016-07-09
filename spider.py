@@ -5,7 +5,7 @@ wifi2 = "jr.cap-01.csv"
 prueba = "prov.csv"
 
 
-class ListaAp():
+class ListaApAir():
 	def __init__(self,url):
 		self.url = url		
 	def Leer(self):
@@ -32,7 +32,7 @@ class ListaAp():
 
 
 
-def sca():
+def ListaApScap():
 	from scapy.all import *
 	ap_list = []
 
