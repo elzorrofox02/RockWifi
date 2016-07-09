@@ -11,7 +11,7 @@ IP = "192.168.0.1"
 ips = "192.168.0"
 DHCP_LEASE = "192.168.0.2,192.168.0.254,12h"
 RANG_IP = ips
-DUMP_PATH = "/root/Desktop/RockWifi-master"
+DUMP_PATH = "/root/Escritorio/RockWifi"
 
 interface = "wlan0"
 Host_SSID = "Roque"
