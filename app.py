@@ -70,12 +70,14 @@ class myHandler(BaseHTTPRequestHandler):
 
 class Forwaid:
 	def conf(self):
-		os.system('rfkill unblock wlan')      
+		if os.path.isfile('/usr/bin/nmcli') and os.path.isfile('/usr/sbin/rfkill'):
+			Popen(['nmcli', 'radio', 'wifi', 'off'],stdout=PIPE,stderr=DN).wait()
+			Popen(['rfkill', 'unblock', 'wlan'],stdout=PIPE,stderr=DN).wait()
 		os.system('ifconfig %s down' % interface)
-		os.system('ifconfig %s %s netmask 255.255.255.0' %(interface,IP))        
+		os.system('ifconfig %s %s netmask 255.255.255.0' %(interface,IP))
 		os.system('ifconfig %s up' % interface)        
 		os.system('echo "1" > /proc/sys/net/ipv4/ip_forward')
-		os.system('route add -net '+RANG_IP+'.0 netmask 255.255.255.0 gw %s'%IP)        
+		os.system('route add -net '+RANG_IP+'.0 netmask 255.255.255.0 gw %s'%IP)
 		os.system('iptables --flush')
 		os.system('iptables --table nat --flush')
 		os.system('iptables --delete-chain')
@@ -83,10 +85,13 @@ class Forwaid:
 		os.system('iptables -P FORWARD ACCEPT')
 		os.system('iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination %s:80'%IP)
 		os.system('iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination %s:%s'%(IP,ssl_port))
-		os.system('iptables -t nat -A POSTROUTING -j MASQUERADE')       
+		os.system('iptables -t nat -A PREROUTING -p udp --dport 53 -j DNAT --to-destination %s:%s'% (IP, 53))
+		os.system('iptables -t nat -A PREROUTING -p tcp --dport 53 -j DNAT --to-destination %s:%s'%(IP,53))
+		os.system('iptables -t nat -A POSTROUTING -j MASQUERADE')
+		Popen(['sysctl', '-w', 'net.ipv4.conf.all.route_localnet=1'],stdout=DN,stderr=PIPE)
 		
 	def detenerservicion(self):
-		os.system('killall hostapd')        
+		os.system('killall hostapd')
 		os.system('killall aireplay-ng')
 		os.system('killall airodump-ng')
 		os.system('killall lighttpd')

@@ -8,7 +8,7 @@ class Dependecias():
 		self.VerificarDepen()
 		
 	def VerificarDepen(self):		
-		lib = ["hostapd","dhcpd","lighttpd","iwconfig","rfkill","xterm","aireplay-ng","airodump-ng"]
+		lib = ["hostapd","dnsmasq","dhcpd","lighttpd","iwconfig","rfkill","xterm","aireplay-ng","airodump-ng"]
 		for i in lib:	
 			com4 = "if hash %s 2>/dev/null;then echo 'Installed';fi"%i	
 			tubo = Popen([com4],shell=True,stdout=PIPE, stderr=PIPE,stdin=PIPE)
@@ -23,7 +23,7 @@ class Dependecias():
 			self.ActualizarDepe()
 
 	def installDepedencias(self):
-			lib = ["hostapd","dhcpd","lighttpd","iwconfig","rfkill","xterm","aireplay-ng","airodump-ng"]
+			lib = ["hostapd","dnsmasq","dhcpd","lighttpd","iwconfig","rfkill","xterm","aireplay-ng","airodump-ng"]
 			for i in lib:	
 				com4 = "if hash %s 2>/dev/null;then echo 'Installed';fi"%i	
 				tubo = Popen([com4],shell=True,stdout=PIPE, stderr=PIPE,stdin=PIPE)
@@ -33,9 +33,10 @@ class Dependecias():
 				else:
 					print R+'[+]'+W+' Not Install %s'%i
 					if i == "dhcpd":
-						os.system("apt-get --yes install %s"%i)
+						os.system("apt-get --yes --force-yes install isc-dhcp-server")						
 					else:
-						os.system("apt-get --yes --force-yes install isc-dhcp-server")
+						os.system("apt-get --yes install %s"%i)
+						
 
 	def ActualizarDepe(self):
 		cmd2 = os.system("echo '# Kali linux repositories | Added by RockWifi\ndeb http://http.kali.org/kali kali-rolling main contrib non-free\ndeb http://repo.kali.org/kali kali-bleeding-edge main' >> /etc/apt/sources.list")

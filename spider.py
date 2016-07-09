@@ -36,3 +36,14 @@ class ListaAp():
 hola = ListaAp(wifi2)
 hola.BorrarPrimera()
 hola.Leer()
+
+"""
+APs_context = []
+    for i in APs:
+        APs_context.append({
+            'channel': APs[i][0],
+            'essid': APs[i][1],
+            'bssid': APs[i][2],
+            'vendor': mac_matcher.get_vendor_name(APs[i][2])
+        })
+"""
