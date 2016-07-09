@@ -222,26 +222,12 @@ class Forwaid:
 		Popen(['xterm','-e', 'dhcpd','-d','-f','-cf' ,''+DUMP_PATH+'/dhcpd.conf','wlan0'], stdout=DN, stderr=DN)
 		#Creo Dns
 		#Popen(['xterm','-title', 'FAKEDNS','-e','python','-cf' ,''+DUMP_PATH+'/fakedns.py'], stdout=DN, stderr=DN)
-		Popen(['xterm','-e','python',''+DUMP_PATH+'/fakedns.py'], stdout=DN, stderr=DN)
+		Popen(['xterm','-e','python',''+ACTUAL_PATH+'/fakedns.py'], stdout=DN, stderr=DN)
 		
 		
 class modulosparaIntall:
 	def __init__(self):
-		veryy = Dependecias()
-		
-	def get_hostapd(self):
-		if not os.path.isfile('/usr/sbin/hostapd'):
-			install = raw_input(
-				('[' + T + '*' + W + '] hostapd not found ' +
-				'in /usr/sbin/hostapd, install now? [y/n] ')
-			)
-			if install == 'y':
-				os.system('apt-get -y install hostapd')
-			else:
-				sys.exit(('[' + R + '-' + W + '] hostapd' +
-						'not found in /usr/sbin/hostapd'))
-		else:
-			print G+'[+]'+W+' Instalado Hospad'
+		veryy = Dependecias()		
 
 def inic():   
 	print G+'By JR'+W   
@@ -299,6 +285,5 @@ def inic():
 		pass		
 	inic()
 
-if __name__ == "__main__":
-	#while True:
-	inic()    
+if __name__ == "__main__":	
+	inic()
