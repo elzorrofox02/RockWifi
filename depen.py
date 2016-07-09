@@ -1,44 +1,43 @@
 from subprocess import Popen,PIPE,check_output
-import subprocess
 import os
 
-#com = 'dpkg -l | grep hostapd'
-#com2 = 'dpkg --get-selections | grep lighttpd'
+class Dependecias():
+	def __init__(self):		
+		self.numeros = 0
+		self.VerificarDepen()
+		
+	def VerificarDepen(self):		
+		lib = ["hostapd","dhcpd","lighttpd","iwconfig","rfkill","xterm","aireplay-ng","airodump-ng"]
+		for i in lib:	
+			com4 = "if hash %s 2>/dev/null;then echo 'Installed';fi"%i	
+			tubo = Popen([com4],shell=True,stdout=PIPE, stderr=PIPE,stdin=PIPE)
+			stdout,stderr = tubo.communicate()
+			if 'Installed' in str(stdout):
+				print "Installed %s"%i									
+			else:				
+				print "Not Install %s"%i
+				self.numeros = self.numeros +1	
+				
+		if self.numeros >0:
+			self.ActualizarDepe()
 
-"""
-hola = ["hostapd","lighttpd","iwconfig","rfkill","XTerm","aireplay-ng","airodump-ng"]
+	def installDepedencias(self):
+			lib = ["hostapd","dhcpd","lighttpd","iwconfig","rfkill","xterm","aireplay-ng","airodump-ng"]
+			for i in lib:	
+				com4 = "if hash %s 2>/dev/null;then echo 'Installed';fi"%i	
+				tubo = Popen([com4],shell=True,stdout=PIPE, stderr=PIPE,stdin=PIPE)
+				stdout,stderr = tubo.communicate()
+				if 'Installed' in str(stdout):
+					print "Installed %s"%i				
+				else:
+					print "Not Install %s"%i
+					if i == "dhcpd":
+						os.system("apt-get --yes install %s"%i)
+					else:
+						os.system("apt-get --yes --force-yes install isc-dhcp-server")
 
-for i in hola:	
-	com2 = 'dpkg --get-selections | grep %s'%i	
-	hola = Popen([com2],shell=True,stdout=PIPE, stderr=PIPE,stdin=PIPE)
-	stdout,stderr = hola.communicate()
-	if 'install' in str(stdout):
-		print "instaldo %s"%i
-	else:
-		print "NOOOOOOOOOOOO %s"%i
-		#os.system("apt-get --yes install %s"%i)
-	#print stdout
-"""
-com4 = "if hash iwconfig 2>/dev/null;then echo 'Installed';fi"
-hola = Popen([com4],shell=True,stdout=PIPE, stderr=PIPE,stdin=PIPE)
-stdout,stderr = hola.communicate()
-if 'Installed' in str(stdout):
-	print "Installed "
-else:
-	print "NOt Install"
-#print stdout
-
-
-#os.system("if hash iwconfig 2>/dev/null;then echo 'Ok';fi")
-	
-"""
-com3 = 'dpkg --get-selections | grep dhcpd'
-hola = Popen([com3],shell=True,stdout=PIPE, stderr=PIPE,stdin=PIPE)
-stdout,stderr = hola.communicate()
-if 'install' in str(stdout):
-	print "instaldo"
-else:
-	print "NOOOOOOOOOOOO"
-	os.system("apt-get --yes install isc-dhcp-server --force-yes")
-print stdout
-"""
+	def ActualizarDepe(self):
+		cmd2 = os.system("echo '# Kali linux repositories | Added by RockWifi\ndeb http://http.kali.org/kali kali-rolling main contrib non-free\ndeb http://repo.kali.org/kali kali-bleeding-edge main' >> /etc/apt/sources.list")
+		os.system('apt-get update -m')
+		os.system('apt-get install')	
+		self.installDepedencias()
