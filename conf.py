@@ -13,6 +13,7 @@ c_wifiurl = "scan"
 #Wifi
 c_interface = "wlan0"
 c_interairm = False 
+c_ActualInterface = False
 c_Host_SSID = "Roque"
 c_Host_CHAN = "6"
 

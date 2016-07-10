@@ -10,6 +10,8 @@ from depen import Dependecias
 from interface import *
 from conf import *
 
+FACEJ = False
+
 class myHandler(BaseHTTPRequestHandler):	
 	def do_GET(self):
 		print "pide algo"
@@ -90,7 +92,7 @@ class Forwaid:
 		os.system('pkill hostapd')
 		os.system('pkill lighttpd')
 		os.system('killall -9 dnsmasq')
-		os.system("kill $(ps a | grep python| grep fakedns | awk '{print $1}'")
+		#os.system("kill $(ps a | grep python| grep fakedns | awk '{print $1}'")
 		Popen(['airmon-ng','stop', c_interface], stdout=DN, stderr=DN)         
 		Popen(['service','stop', 'networkmanager'], stdout=DN, stderr=DN)
 		os.system('echo "0" > /proc/sys/net/ipv4/ip_forward')        
@@ -231,7 +233,7 @@ def inic():
 		pass
 	else:
 		os.mkdir(c_DUMP_PATH)
-	modulosparaIntall()
+	modulosparaIntall()	
 	try:
 		hola = raw_input("Seleciona options>: ")
 	except KeyboardInterrupt:
@@ -268,8 +270,14 @@ def inic():
 		vamos.reiniciar()		
 		sys.exit()
 	elif hola == "11":
-		pass		
+		print FACEJ.resul()		
 	inic()
 
-if __name__ == "__main__":	
+def Selecinter():
+	global FACEJ
+	FACEJ = Interfaces()
+	FACEJ.iwconfig() #Selecciona interface	
+
+if __name__ == "__main__":
+	Selecinter()
 	inic()

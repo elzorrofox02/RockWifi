@@ -1,31 +1,49 @@
 from subprocess import Popen,PIPE
-import os
+import os,sys
+from conf import *
 
 class Interfaces():
-	def iwconfig(self):
+	def __init__(self):
+		self.inter = False
+
+	def resul(self):
+		return self.inter
+
+	def iwconfig(self):		
 		monitors = []
 		interfaces = {}
 		num = 0
 		proc = Popen(['iwconfig'], stdout=PIPE, stderr=PIPE)
 		for line in proc.communicate()[0].split('\n'):
 			if len(line) == 0: continue # Isn't an empty string
-			if line[0] != ' ': # Doesn't start with space
-				
+			if line[0] != ' ': # Doesn't start with space				
 				iface = line[:line.find(' ')] # is the interface name
 				if 'Mode:Monitor' in line:
+					numer = num+1					
 					monitors.append(iface)
+					interfaces[numer] = iface
 				elif 'IEEE 802.11' in line:										
 					numer = num+1
-					interfaces[numer] = iface
-						
+					interfaces[numer] = iface					
 		
 		for clave,valor in interfaces.items():
-			print "%s) %s"%(clave,valor)			
-		elige1 = raw_input(" Elige Interface > ")
-		seleccion = interfaces.get(int(elige1))
+			print "%s) %s"%(clave,valor)
+		try:
+			elige1 = raw_input(" Elige Interface > ")
+			if elige1.isdigit():
+				seleccion = interfaces.get(int(elige1))
+				if seleccion == None:
+					print "No Valido"
+				else:
+					print "Haz Selecionado %s"%seleccion
+			else:
+				print "Comando Invalido"
+				sys.exit()
+			
 
-		print "Haz Selecionado %s"%seleccion
+			self.inter = seleccion
+		except KeyboardInterrupt:
+			sys.exit()
+		#return monitors, interfaces
+		return self.inter
 
-
-		return monitors, interfaces
-Interfaces().iwconfig()

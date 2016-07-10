@@ -1,4 +1,4 @@
-import csv
+import csv,sys
 import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR) #eleimiar error scapy ipv6
 from scapy.all import *
