@@ -4,7 +4,6 @@ from os import curdir, sep
 import cgi,os,sys,time
 from subprocess import Popen, PIPE, check_output
 import socket
-from colors import *
 import shutil
 #Libs Create
 from depen import Dependecias
