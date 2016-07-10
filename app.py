@@ -9,23 +9,7 @@ import shutil
 #Libs Create
 from depen import Dependecias
 from interface import *
-
-PORT_NUMBER = 80
-ssl_port = 443
-IP = "192.168.0.1"
-ips = "192.168.0"
-DHCP_LEASE = "192.168.0.2,192.168.0.254,12h"
-RANG_IP = ips
-DUMP_PATH="/tmp/RockWifi"
-ACTUAL_PATH = os.getcwd()
-#print ACTUAL_PATH
-#webs = os.path.join(ACTUAL_PATH)
-#print webs
-
-interface = "wlan0"
-Host_SSID = "Roque"
-Host_CHAN = "6"
-DN = open(os.devnull, 'w')
+from conf import *
 
 class myHandler(BaseHTTPRequestHandler):	
 	def do_GET(self):
@@ -73,20 +57,20 @@ class Forwaid:
 		if os.path.isfile('/usr/bin/nmcli') and os.path.isfile('/usr/sbin/rfkill'):
 			Popen(['nmcli', 'radio', 'wifi', 'off'],stdout=PIPE,stderr=DN).wait()
 			Popen(['rfkill', 'unblock', 'wlan'],stdout=PIPE,stderr=DN).wait()
-		os.system('ifconfig %s down' % interface)
-		os.system('ifconfig %s %s netmask 255.255.255.0' %(interface,IP))
-		os.system('ifconfig %s up' % interface)        
+		os.system('ifconfig %s down' % c_interface)
+		os.system('ifconfig %s %s netmask 255.255.255.0' %(c_interface,c_IP))
+		os.system('ifconfig %s up' % c_interface)        
 		os.system('echo "1" > /proc/sys/net/ipv4/ip_forward')
-		os.system('route add -net '+RANG_IP+'.0 netmask 255.255.255.0 gw %s'%IP)
+		os.system('route add -net '+c_RANG_IP+'.0 netmask 255.255.255.0 gw %s'%c_IP)
 		os.system('iptables --flush')
 		os.system('iptables --table nat --flush')
 		os.system('iptables --delete-chain')
 		os.system('iptables --table nat --delete-chain')
 		os.system('iptables -P FORWARD ACCEPT')
-		os.system('iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination %s:80'%IP)
-		os.system('iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination %s:%s'%(IP,ssl_port))
-		os.system('iptables -t nat -A PREROUTING -p udp --dport 53 -j DNAT --to-destination %s:%s'% (IP, 53))
-		os.system('iptables -t nat -A PREROUTING -p tcp --dport 53 -j DNAT --to-destination %s:%s'%(IP,53))
+		os.system('iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination %s:80'%c_IP)
+		os.system('iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination %s:%s'%(c_IP,c_ssl_port))
+		os.system('iptables -t nat -A PREROUTING -p udp --dport 53 -j DNAT --to-destination %s:%s'% (c_IP, 53))
+		os.system('iptables -t nat -A PREROUTING -p tcp --dport 53 -j DNAT --to-destination %s:%s'%(c_IP,53))
 		os.system('iptables -t nat -A POSTROUTING -j MASQUERADE')
 		Popen(['sysctl', '-w', 'net.ipv4.conf.all.route_localnet=1'],stdout=DN,stderr=PIPE)
 		
@@ -98,7 +82,7 @@ class Forwaid:
 		os.system('killall dhcpd')
 		os.system('killall mdk3')
 		#os.system('service stop networkmanager')
-		#os.system('airmon-ng stop '+interface)
+		#os.system('airmon-ng stop '+c_interface)
 		os.system('pkill mdk3')
 		os.system('pkill dhcpd')
 		os.system('pkill airodump-ng')
@@ -108,7 +92,7 @@ class Forwaid:
 		os.system('pkill lighttpd')
 		os.system('killall -9 dnsmasq')
 		os.system("kill $(ps a | grep python| grep fakedns | awk '{print $1}'")
-		Popen(['airmon-ng','stop', interface], stdout=DN, stderr=DN)         
+		Popen(['airmon-ng','stop', c_interface], stdout=DN, stderr=DN)         
 		Popen(['service','stop', 'networkmanager'], stdout=DN, stderr=DN)
 		os.system('echo "0" > /proc/sys/net/ipv4/ip_forward')        
 		
@@ -120,13 +104,13 @@ class Forwaid:
 		os.system('iptables --table nat --delete-chain')
 		
 	def reiniciar(self):
-		#os.system('service restart networkmanager')
+		os.system('service restart networkmanager')
 		os.system('killall xterm')
-		shutil.rmtree(DUMP_PATH, True)
+		shutil.rmtree(c_DUMP_PATH, True)
 
 	def crearHttp(self):
 		configHttp=(
-		'server.document-root = "'+ACTUAL_PATH+'/data"\n'
+		'server.document-root = "'+c_ACTUAL_PATH+'/data"\n'
 		'server.modules = ("mod_access","mod_alias","mod_accesslog","mod_fastcgi","mod_redirect","mod_rewrite")\n'
 
 		'fastcgi.server = ( ".php" => (("bin-path" => "/usr/bin/php-cgi","socket" => "/php.socket")))\n'
@@ -143,7 +127,7 @@ class Forwaid:
 		'url.redirect = ( "^/(.*)" => "http://%1/$1" )\n'
 		'}'
 		)
-		with open(''+DUMP_PATH+'/lighttpd.conf', 'w') as httpconfig:
+		with open(''+c_DUMP_PATH+'/lighttpd.conf', 'w') as httpconfig:
 			httpconfig.write(configHttp)  	 
 		
 	def confFakeapydhcp(self):	
@@ -160,24 +144,24 @@ class Forwaid:
 		 'authoritative;\n' 
 		 'default-lease-time 600;\n'
 		 'max-lease-time 7200;\n'         
-		 'subnet '+RANG_IP+'.0 netmask 255.255.255.0 {\n'
-		 'option broadcast-address '+RANG_IP+'.255;\n'
-		 'option routers '+IP+';\n'
+		 'subnet '+c_RANG_IP+'.0 netmask 255.255.255.0 {\n'
+		 'option broadcast-address '+c_RANG_IP+'.255;\n'
+		 'option routers '+c_IP+';\n'
 		 'option subnet-mask 255.255.255.0;\n'
-		 'option domain-name-servers '+IP+';\n'
-		 'range '+RANG_IP+'.100 '+RANG_IP+'.250;\n'         
+		 'option domain-name-servers '+c_IP+';\n'
+		 'range '+c_RANG_IP+'.100 '+c_RANG_IP+'.250;\n'         
 		 '}'
 		)
 		configHosts = (
 			'192.168.0.1 *'
 		)		
-		with open(DUMP_PATH+'/hostapd.conf', 'w') as apconf:
-			apconf.write(configAp % (interface, Host_SSID, Host_CHAN))
+		with open(c_DUMP_PATH+'/hostapd.conf', 'w') as apconf:
+			apconf.write(configAp % (c_interface, c_Host_SSID, c_Host_CHAN))
 			
-		with open(DUMP_PATH+'/dhcpd.conf', 'w') as dhcpconf:           
+		with open(c_DUMP_PATH+'/dhcpd.conf', 'w') as dhcpconf:           
 			dhcpconf.write(configDhcp2) 
 
-		with open(DUMP_PATH+'/hosts.conf', 'w') as hostss:           
+		with open(c_DUMP_PATH+'/hosts.conf', 'w') as hostss:           
 			hostss.write(configHosts)
 
 	def Dns(self):		
@@ -187,13 +171,9 @@ class Forwaid:
 		'dhcp-range=%s\n'
 		'address=/#/%s'
 		)        
-		with open(''+DUMP_PATH+'/dns.conf', 'w') as dhcpconf:
-			dhcpconf.write(config % (interface, DHCP_LEASE, IP))		
-		os.system('echo > /var/lib/misc/dnsmasq.leases')
-
-	def escaner(self):
-		os.system('airmon-ng start %s'%interface)
-		os.system('xterm -title "Escaneando Objetivos ..." -bg "#FFFFFF" -fg "#000000" -e airodump-ng -w %s/dump -a mon0'%DUMP_PATH)
+		with open(''+c_DUMP_PATH+'/dns.conf', 'w') as dhcpconf:
+			dhcpconf.write(config % (c_interface, c_DHCP_LEASE, c_IP))		
+		os.system('echo > /var/lib/misc/dnsmasq.leases')	
 			
 	def crearFakeAp(self):
 		self.detenerservicion()
@@ -202,15 +182,15 @@ class Forwaid:
 		self.Dns()
 		self.crearHttp()	   
 		#Creo el Ap falso
-		Popen(['xterm','-e', 'hostapd', ''+DUMP_PATH+'/hostapd.conf'], stdout=DN, stderr=DN)
+		Popen(['xterm','-e', 'hostapd', ''+c_DUMP_PATH+'/hostapd.conf'], stdout=DN, stderr=DN)
 		try:
 			time.sleep(6)
 		except KeyboardInterrupt:
 			print "keyboar"				 
 		#Creo el Dhcp y dns
-		Popen(['xterm','-e','dnsmasq', '-C', ''+DUMP_PATH+'/dns.conf','--no-daemon','--log-queries'], stdout=PIPE, stderr=DN)
+		Popen(['xterm','-e','dnsmasq', '-C', ''+c_DUMP_PATH+'/dns.conf','--no-daemon','--log-queries'], stdout=PIPE, stderr=DN)
 		#Creo el Lihttp
-		os.system('lighttpd -f '+DUMP_PATH+'/lighttpd.conf')      
+		os.system('lighttpd -f '+c_DUMP_PATH+'/lighttpd.conf')      
 
 	def creaFakeApF2(self):
 		self.detenerservicion()
@@ -218,18 +198,18 @@ class Forwaid:
 		self.confFakeapydhcp()
 		self.crearHttp()
 		#Creo Lihhtpd
-		os.system('lighttpd -f '+DUMP_PATH+'/lighttpd.conf')
+		os.system('lighttpd -f '+c_DUMP_PATH+'/lighttpd.conf')
 		#Creo Fake Ap
-		Popen(['xterm','-e', 'hostapd', ''+DUMP_PATH+'/hostapd.conf'], stdout=DN, stderr=DN)
+		Popen(['xterm','-e', 'hostapd', ''+c_DUMP_PATH+'/hostapd.conf'], stdout=DN, stderr=DN)
 		try:
 			time.sleep(6)
 		except KeyboardInterrupt:
 			print "keyboar"
 		#Creo Dhcp
-		Popen(['xterm','-e', 'dhcpd','-d','-f','-cf' ,''+DUMP_PATH+'/dhcpd.conf','wlan0'], stdout=DN, stderr=DN)
+		Popen(['xterm','-e', 'dhcpd','-d','-f','-cf' ,''+c_DUMP_PATH+'/dhcpd.conf','wlan0'], stdout=DN, stderr=DN)
 		#Creo Dns
-		#Popen(['xterm','-title', 'FAKEDNS','-e','python','-cf' ,''+DUMP_PATH+'/fakedns.py'], stdout=DN, stderr=DN)
-		Popen(['xterm','-e','python',''+ACTUAL_PATH+'/fakedns.py'], stdout=DN, stderr=DN)
+		#Popen(['xterm','-title', 'FAKEDNS','-e','python','-cf' ,''+c_DUMP_PATH+'/fakedns.py'], stdout=DN, stderr=DN)
+		Popen(['xterm','-e','python',''+c_ACTUAL_PATH+'/fakedns.py'], stdout=DN, stderr=DN)
 		
 		
 class modulosparaIntall:
@@ -248,10 +228,10 @@ def inic():
 	print G+'10)'+W+' Salir'
 	print G+'11)'+W+' pruebas'
 
-	if os.path.exists(DUMP_PATH):
+	if os.path.exists(c_DUMP_PATH):
 		pass
 	else:
-		os.mkdir(DUMP_PATH)
+		os.mkdir(c_DUMP_PATH)
 	modulosparaIntall()
 	try:
 		hola = raw_input("Seleciona options>: ")
@@ -263,8 +243,8 @@ def inic():
 		sys.exit()
 	if hola == "1":
 		try:
-			server = HTTPServer(('', PORT_NUMBER), myHandler)
-			print 'Started httpserver on port ' , PORT_NUMBER
+			server = HTTPServer(('', c_PORT_NUMBER), myHandler)
+			print 'Started httpserver on port ' , c_PORT_NUMBER
 			server.serve_forever()
 		except KeyboardInterrupt:
 			print '^C received, shutting down the web server'

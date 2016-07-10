@@ -1,6 +1,6 @@
 from subprocess import Popen,PIPE,check_output
 import os
-from colors import *
+from conf import *
 
 class Dependecias():
 	def __init__(self):		

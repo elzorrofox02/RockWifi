@@ -3,9 +3,6 @@ import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR) #eleimiar error scapy ipv6
 from scapy.all import *
 
-wifi = "datos.cap-01.csv"
-wifi2 = "jr.cap-01.csv"
-prueba = "prov.csv"
 ap_list = []
 Aps = {}
 count = 0
