@@ -1,0 +1,7 @@
+
+BSSID, First time seen, Last time seen, channel, Speed, Privacy, Cipher, Authentication, Power, # beacons, # IV, LAN IP, ID-length, ESSID, Key
+C8:3A:35:0E:28:C8, 2016-07-09 04:57:55, 2016-07-09 04:57:55,  6,  54, WPA, CCMP,PSK, -87,        1,        0,   0.  0.  0.  0,  12, Tenda_0E28C8, 
+C8:3A:35:04:0F:B0, 2016-07-09 04:57:48, 2016-07-09 04:58:02,  6,  54, WPA, CCMP,PSK, -87,       13,        0,   0.  0.  0.  0,  13, Wilink_040FB0, 
+
+Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs
+
