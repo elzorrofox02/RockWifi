@@ -9,7 +9,11 @@ count = 0
 
 class ListaApAir():
 	def __init__(self,url):
-		self.url = url		
+		self.url = url	
+
+	def Scan(self):
+		os.system('airmon-ng start %s'%c_interface)
+		os.system('xterm -title "Escaneando Objetivos ..." -bg "#FFFFFF" -fg "#000000" -e airodump-ng -w %s/%s -a mon0'%(c_DUMP_PATH,c_wifiurl))	
 	def Leer(self):
 		with open(self.url) as csvfile:
 			reader = csv.DictReader(csvfile,skipinitialspace=True,strict=True)	
