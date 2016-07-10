@@ -6,7 +6,9 @@ from scapy.all import *
 wifi = "datos.cap-01.csv"
 wifi2 = "jr.cap-01.csv"
 prueba = "prov.csv"
-
+ap_list = []
+Aps = {}
+count = 0
 
 class ListaApAir():
 	def __init__(self,url):
@@ -32,12 +34,7 @@ class ListaApAir():
 				f.write(linea)
 		f.close()
 
-
-ap_list = []
-Aps = {}
-count = 0
 class ListaApAir():
-
 	def __init__(self,iface):
 		sniff(iface=iface, prn = self.PacketHandler)
 	def PacketHandler(self,pkt):
@@ -57,14 +54,11 @@ class ListaApAir():
 		print resultado
 		return resultado
 
-
 hola = raw_input("Selecciona:")
 if hola == "1":	
 	ListaApAir("wlan0mon")
 if hola == "2":
 	resultado
-
-
 
 """
 hola = ListaAp(wifi2)
