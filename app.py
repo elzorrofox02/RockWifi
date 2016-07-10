@@ -58,9 +58,9 @@ class Forwaid:
 		if os.path.isfile('/usr/bin/nmcli') and os.path.isfile('/usr/sbin/rfkill'):
 			Popen(['nmcli', 'radio', 'wifi', 'off'],stdout=PIPE,stderr=DN).wait()
 			Popen(['rfkill', 'unblock', 'wlan'],stdout=PIPE,stderr=DN).wait()
-		os.system('ifconfig %s down' % c_interface)
-		os.system('ifconfig %s %s netmask 255.255.255.0' %(c_interface,c_IP))
-		os.system('ifconfig %s up' % c_interface)        
+		os.system('ifconfig %s down' % conf.c_ActualInterface)
+		os.system('ifconfig %s %s netmask 255.255.255.0' %(conf.c_ActualInterface,c_IP))
+		os.system('ifconfig %s up' % conf.c_ActualInterface)        
 		os.system('echo "1" > /proc/sys/net/ipv4/ip_forward')
 		os.system('route add -net '+c_RANG_IP+'.0 netmask 255.255.255.0 gw %s'%c_IP)
 		os.system('iptables --flush')
@@ -83,7 +83,7 @@ class Forwaid:
 		os.system('killall dhcpd')
 		os.system('killall mdk3')
 		#os.system('service stop networkmanager')
-		#os.system('airmon-ng stop '+c_interface)
+		#os.system('airmon-ng stop '+conf.c_ActualInterface)
 		os.system('pkill mdk3')
 		os.system('pkill dhcpd')
 		os.system('pkill airodump-ng')
@@ -93,7 +93,7 @@ class Forwaid:
 		os.system('pkill lighttpd')
 		os.system('killall -9 dnsmasq')
 		#os.system("kill $(ps a | grep python| grep fakedns | awk '{print $1}'")
-		Popen(['airmon-ng','stop', c_interface], stdout=DN, stderr=DN)         
+		Popen(['airmon-ng','stop', conf.c_ActualInterface], stdout=DN, stderr=DN)         
 		Popen(['service','stop', 'networkmanager'], stdout=DN, stderr=DN)
 		os.system('echo "0" > /proc/sys/net/ipv4/ip_forward')        
 		
@@ -157,7 +157,7 @@ class Forwaid:
 			'192.168.0.1 *'
 		)		
 		with open(c_DUMP_PATH+'/hostapd.conf', 'w') as apconf:
-			apconf.write(configAp % (c_interface, c_Host_SSID, c_Host_CHAN))
+			apconf.write(configAp % (conf.c_ActualInterface, c_Host_SSID, c_Host_CHAN))
 			
 		with open(c_DUMP_PATH+'/dhcpd.conf', 'w') as dhcpconf:           
 			dhcpconf.write(configDhcp2) 
@@ -173,7 +173,7 @@ class Forwaid:
 		'address=/#/%s'
 		)        
 		with open(''+c_DUMP_PATH+'/dns.conf', 'w') as dhcpconf:
-			dhcpconf.write(config % (c_interface, c_DHCP_LEASE, c_IP))		
+			dhcpconf.write(config % (conf.c_ActualInterface, c_DHCP_LEASE, c_IP))		
 		os.system('echo > /var/lib/misc/dnsmasq.leases')	
 			
 	def crearFakeAp(self):
@@ -270,7 +270,8 @@ def inic():
 		vamos.reiniciar()		
 		sys.exit()
 	elif hola == "11":
-		print FACEJ.resul()		
+		print conf.c_ActualInterface
+		#print FACEJ.resul()		
 	inic()
 
 def Selecinter():

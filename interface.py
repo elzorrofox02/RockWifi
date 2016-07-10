@@ -1,6 +1,6 @@
 from subprocess import Popen,PIPE
 import os,sys
-from conf import *
+import conf
 
 class Interfaces():
 	def __init__(self):
@@ -42,6 +42,7 @@ class Interfaces():
 			
 
 			self.inter = seleccion
+			conf.c_ActualInterface = self.inter
 		except KeyboardInterrupt:
 			sys.exit()
 		#return monitors, interfaces
