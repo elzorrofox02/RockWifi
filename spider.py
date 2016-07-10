@@ -1,4 +1,7 @@
 import csv
+import logging
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR) #eleimiar error scapy ipv6
+from scapy.all import *
 
 wifi = "datos.cap-01.csv"
 wifi2 = "jr.cap-01.csv"
@@ -20,8 +23,7 @@ class ListaApAir():
 		# abrimos el archivo solo de lectura
 		f = open(self.url,"r") 
 		lineas = f.readlines()
-		f.close()
-		 
+		f.close()		 
 		# abrimos el archivo pero vacio
 		f = open(self.url,"w") 
 		for linea in lineas:    
@@ -31,23 +33,29 @@ class ListaApAir():
 		f.close()
 
 
-
-def ListaApScap():
-	from scapy.all import *
-	ap_list = []
-
-	def PacketHandler(pkt) :
-
-	  if pkt.haslayer(Dot11) :
-			if pkt.type == 0 and pkt.subtype == 8 :
+ap_list = []
+class ListaApAir():
+	def __init__(self):
+		sniff(iface="wlan0mon", prn = self.PacketHandler)
+	def PacketHandler(self,pkt):
+		if pkt.haslayer(Dot11):
+			if pkt.type == 0 and pkt.subtype == 8:
 				if pkt.addr2 not in ap_list :
 					ap_list.append(pkt.addr2)
 					print "AP MAC: %s with SSID: %s " %(pkt.addr2, pkt.info)
+					
+	def resultado():
+		print resultado
+		return resultado
 
 
-	sniff(iface="mon0", prn = PacketHandler)
+hola = raw_input("Selecciona:")
 
-sca()
+if hola == "1":
+	print 'ha'
+	ListaApAir()
+if hola == "2":
+	resultado
 
 
 
@@ -58,11 +66,11 @@ hola.Leer()
 """
 """
 APs_context = []
-    for i in APs:
-        APs_context.append({
-            'channel': APs[i][0],
-            'essid': APs[i][1],
-            'bssid': APs[i][2],
-            'vendor': mac_matcher.get_vendor_name(APs[i][2])
-        })
+	for i in APs:
+		APs_context.append({
+			'channel': APs[i][0],
+			'essid': APs[i][1],
+			'bssid': APs[i][2],
+			'vendor': mac_matcher.get_vendor_name(APs[i][2])
+		})
 """
