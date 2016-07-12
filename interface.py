@@ -1,5 +1,6 @@
 from subprocess import Popen,PIPE
 import os,sys
+from conf import *
 import conf
 
 class Interfaces():
