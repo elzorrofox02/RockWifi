@@ -37,7 +37,7 @@ class ListaApAir():
 
 class ListaApAir():
 	def __init__(self,iface):
-		sniff(iface=iface, prn = self.PacketHandler)
+		sniff(iface=iface, prn=self.PacketHandler)
 	def PacketHandler(self,pkt):
 		global Aps,count
 		if pkt.haslayer(Dot11):
@@ -52,14 +52,17 @@ class ListaApAir():
 					count += 1
 					Aps[count] = [canal,ssid,mac]					
 	def resultado():
-		print resultado
-		return resultado
+		pass		
 
-hola = raw_input("Selecciona:")
-if hola == "1":	
-	ListaApAir("wlan0mon")
-if hola == "2":
-	resultado
+	def SelecionAp():
+		hola = raw_input("Selecciona:")
+		if hola == "1":	
+			ListaApAir(conf.c_ActualInterface)
+		if hola == "2":
+			pass
+
+
+
 
 """
 hola = ListaAp(wifi2)

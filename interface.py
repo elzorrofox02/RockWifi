@@ -33,13 +33,13 @@ class Interfaces():
 			if elige1.isdigit():
 				seleccion = interfaces.get(int(elige1))
 				if seleccion == None:
-					print "No Valido"
+					print "No Valido Seleccione Una Interface Valida"
+					self.iwconfig()
 				else:
 					print "Haz Selecionado %s"%seleccion
 			else:
 				print "Comando Invalido"
-				sys.exit()
-			
+				sys.exit()			
 
 			self.inter = seleccion
 			conf.c_ActualInterface = self.inter
