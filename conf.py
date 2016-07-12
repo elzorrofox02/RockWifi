@@ -17,6 +17,8 @@ c_ActualInterface = False
 c_Host_SSID = "Roque"
 c_Host_CHAN = "6"
 
+c_canal_daemon_corriendo = True
+
 DN = open(os.devnull, 'w')
 
 W = '\033[0m'    # white (normal)

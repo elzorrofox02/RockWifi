@@ -20,6 +20,7 @@ class Interfaces():
 			if line[0] != ' ': # Doesn't start with space				
 				iface = line[:line.find(' ')] # is the interface name
 				if 'Mode:Monitor' in line:
+					conf.c_interairm = iface
 					numer = num+1					
 					monitors.append(iface)
 					interfaces[numer] = iface
@@ -45,7 +46,5 @@ class Interfaces():
 			self.inter = seleccion
 			conf.c_ActualInterface = self.inter
 		except KeyboardInterrupt:
-			sys.exit()
-		#return monitors, interfaces
+			sys.exit()		
 		return self.inter
-

@@ -2,8 +2,8 @@ import csv,sys
 import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR) #eleimiar error scapy ipv6
 from scapy.all import *
-#import conf
-
+from threading import Thread, Lock
+import conf
 ap_list = []
 Aps = {}
 count = 0
@@ -36,9 +36,44 @@ class ListaApAir():
 				f.write(linea)
 		f.close()
 
-class ListaApAir():
+"""
+hola = ListaAp(wifi2)
+hola.BorrarPrimera()
+hola.Leer()
+"""
+class ListaApAir2():
 	def __init__(self,iface):
-		sniff(iface=iface, prn=self.PacketHandler)
+		chanhop = Thread(target=self.canalC, args=(iface,))
+		chanhop.daemon = True
+		chanhop.start()
+		sniff(iface=iface, prn=self.PacketHandler)		
+
+	def canalC(self,iface):
+	canal = 0
+	while conf.c_canal_daemon_corriendo:
+		try:
+			if canal > 11:
+				canal = 0
+			canal = canal + 1
+			channel = str(canal)
+			print (channel)            
+			iw = Popen(['iw', 'dev', iface, 'set', 'channel', channel],stdout=DN, stderr=PIPE)
+			for line in iw.communicate()[1].split('\n'):               
+				if len(line) > 2:
+					with lock:
+						err = (
+							'[' + R + '-' + W + '] Channel hopping failed: ' +
+							R + line + W + '\n'
+							'Try disconnecting the monitor mode\'s parent' +
+							'interface (e.g. wlan0)\n'
+							'from the network if you have not already\n'
+						)
+						sys.exit(err)
+					break            
+			time.sleep(1)
+		except KeyboardInterrupt:
+			sys.exit()
+
 	def PacketHandler(self,pkt):
 		global Aps,count
 		if pkt.haslayer(Dot11):
@@ -53,20 +88,7 @@ class ListaApAir():
 					count += 1
 					Aps[count] = [canal,ssid,mac]					
 	def resultado(self):
-		pass		
+		return Aps		
 
 
-hola = raw_input("sele>")
-if hola== '1':
-	ListaApAir('wlan0mon')
-if hola == "2":
-	resultado
-
-
-
-
-"""
-hola = ListaAp(wifi2)
-hola.BorrarPrimera()
-hola.Leer()
-"""
+ListaApAir2()
