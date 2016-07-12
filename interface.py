@@ -27,7 +27,7 @@ class Interfaces():
 					interfaces[numer] = iface					
 		
 		for clave,valor in interfaces.items():
-			print "%s) %s"%(clave,valor)
+			print G+"%s)"+W+" %s"%(clave,valor)
 		try:
 			elige1 = raw_input(" Elige Interface > ")
 			if elige1.isdigit():
