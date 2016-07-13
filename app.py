@@ -7,9 +7,9 @@ import socket
 import shutil
 #Libs Create
 from depen import Dependecias
-from interface import *
+from interface import Interfaces,ListaApAir2
 from conf import *
-from spider import ListaApAir2,SelecionAp
+import conf
 
 FACEJ = False
 
@@ -92,7 +92,9 @@ class Forwaid:
 		os.system('pkill lighttpd')
 		os.system('killall -9 dnsmasq')
 		#os.system("kill $(ps a | grep python| grep fakedns | awk '{print $1}'")
-		Popen(['airmon-ng','stop', conf.c_ActualInterface], stdout=DN, stderr=DN)         
+		Popen(['airmon-ng','stop', conf.c_ActualInterface], stdout=DN, stderr=DN)
+		if conf.c_interairm != False:
+			Popen(['airmon-ng','stop', conf.c_interairm], stdout=DN, stderr=DN)        
 		Popen(['service','stop', 'networkmanager'], stdout=DN, stderr=DN)
 		os.system('echo "0" > /proc/sys/net/ipv4/ip_forward')        
 		
@@ -268,9 +270,10 @@ def inic():
 		vamos.detenerservicion()
 		vamos.reiniciar()		
 		sys.exit()
-	elif hola == "11":		
-		print conf.c_ActualInterface
-		#print FACEJ.resul()		
+	elif hola == "11":
+		os.system("clear")		
+		Popen(['airmon-ng','start', conf.c_ActualInterface], stdout=DN, stderr=DN).wait()
+		ListaApAir2()		
 	inic()
 
 def Selecinter():
@@ -279,7 +282,6 @@ def Selecinter():
 	FACEJ.iwconfig() #Selecciona interface
 	#Forwaid().conf()	
 	#Forwaid().detenerservicion()	
-	SelecionAp()
 
 if __name__ == "__main__":	
 	Selecinter()

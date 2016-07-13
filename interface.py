@@ -1,10 +1,11 @@
 import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR) #eleimiar error scapy ipv6
 from subprocess import Popen,PIPE
-import os,sys,conf,csv
-from conf import *
+import os,sys,csv
 from scapy.all import *
 from threading import Thread, Lock
+from conf import *
+import conf
 
 class Interfaces():
 	def __init__(self):
@@ -89,12 +90,16 @@ hola.BorrarPrimera()
 hola.Leer()
 """
 class ListaApAir2():
-	def __init__(self,iface):		
-		chanhop = Thread(target=self.canalC, args=(iface,))
-		chanhop.daemon = True
-		chanhop.start()
-		sniff(iface=iface, prn=self.PacketHandler)	
-		conf.c_canal_daemon_corriendo = False
+	def __init__(self):
+		Interfaces().iwconfig()
+		if conf.c_interairm != False:
+			chanhop = Thread(target=self.canalC, args=(conf.c_interairm,))
+			chanhop.daemon = True
+			chanhop.start()
+			sniff(iface=conf.c_interairm, prn=self.PacketHandler)	
+			conf.c_canal_daemon_corriendo = False
+		else:
+			print "Interfaces No esta En modo Monitor"			
 
 	def canalC(self,iface):
 		canal = 0
@@ -136,6 +141,4 @@ class ListaApAir2():
 					Aps[count] = [canal,ssid,mac]
 
 	def resultado(self):
-		return Aps		
-
-ListaApAir2("wlan0mon")
+		return Aps
