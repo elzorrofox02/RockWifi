@@ -3,7 +3,9 @@ import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR) #eleimiar error scapy ipv6
 from scapy.all import *
 from threading import Thread, Lock
+from subprocess import Popen, PIPE, check_output
 import conf
+from conf import *
 ap_list = []
 Aps = {}
 count = 0
@@ -42,39 +44,39 @@ hola.BorrarPrimera()
 hola.Leer()
 """
 class ListaApAir2():
-	def __init__(self,iface):
+	def __init__(self,iface):		
 		chanhop = Thread(target=self.canalC, args=(iface,))
 		chanhop.daemon = True
 		chanhop.start()
-		sniff(iface=iface, prn=self.PacketHandler)		
+		sniff(iface=iface, prn=self.PacketHandler)	
+		conf.c_canal_daemon_corriendo = False
 
 	def canalC(self,iface):
-	canal = 0
-	while conf.c_canal_daemon_corriendo:
-		try:
-			if canal > 11:
-				canal = 0
-			canal = canal + 1
-			channel = str(canal)
-			print (channel)            
-			iw = Popen(['iw', 'dev', iface, 'set', 'channel', channel],stdout=DN, stderr=PIPE)
-			for line in iw.communicate()[1].split('\n'):               
-				if len(line) > 2:
-					with lock:
-						err = (
-							'[' + R + '-' + W + '] Channel hopping failed: ' +
-							R + line + W + '\n'
-							'Try disconnecting the monitor mode\'s parent' +
-							'interface (e.g. wlan0)\n'
-							'from the network if you have not already\n'
-						)
-						sys.exit(err)
-					break            
-			time.sleep(1)
-		except KeyboardInterrupt:
-			sys.exit()
+		canal = 0
+		while conf.c_canal_daemon_corriendo:
+			try:
+				if canal > 11:
+					canal = 0
+				canal = canal + 1
+				channel = str(canal)				           
+				iw = Popen(['iw', 'dev', iface, 'set', 'channel', channel],stdout=DN, stderr=PIPE)
+				for line in iw.communicate()[1].split('\n'):               
+					if len(line) > 2:
+						with lock:
+							err = (
+								'[' + R + '-' + W + '] Channel hopping failed: ' +
+								R + line + W + '\n'
+								'Try disconnecting the monitor mode\'s parent' +
+								'interface (e.g. wlan0)\n'
+								'from the network if you have not already\n'
+							)
+							sys.exit(err)
+						break
+				time.sleep(1)
+			except KeyboardInterrupt:
+				sys.exit()
 
-	def PacketHandler(self,pkt):
+	def PacketHandler(self,pkt):		
 		global Aps,count
 		if pkt.haslayer(Dot11):
 			if pkt.type == 0 and pkt.subtype == 8:						
@@ -86,9 +88,9 @@ class ListaApAir2():
 					senal = -(256 - ord(pkt.notdecoded[-2:-1]))	
 					print "%s %s %s Signal : %s " %(mac, canal,ssid,senal)
 					count += 1
-					Aps[count] = [canal,ssid,mac]					
+					Aps[count] = [canal,ssid,mac]
+
 	def resultado(self):
 		return Aps		
 
-
-ListaApAir2()
+ListaApAir2("wlan0mon")
