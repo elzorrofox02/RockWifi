@@ -2,6 +2,7 @@ import csv,sys
 import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR) #eleimiar error scapy ipv6
 from scapy.all import *
+#import conf
 
 ap_list = []
 Aps = {}
@@ -41,8 +42,8 @@ class ListaApAir():
 	def PacketHandler(self,pkt):
 		global Aps,count
 		if pkt.haslayer(Dot11):
-			if pkt.type == 0 and pkt.subtype == 8:
-				if pkt.addr2 not in ap_list :
+			if pkt.type == 0 and pkt.subtype == 8:						
+				if pkt.addr2 not in ap_list :					
 					ap_list.append(pkt.addr2)
 					mac = pkt.addr2
 					ssid = pkt.info
@@ -51,15 +52,15 @@ class ListaApAir():
 					print "%s %s %s Signal : %s " %(mac, canal,ssid,senal)
 					count += 1
 					Aps[count] = [canal,ssid,mac]					
-	def resultado():
+	def resultado(self):
 		pass		
 
-	def SelecionAp():
-		hola = raw_input("Selecciona:")
-		if hola == "1":	
-			ListaApAir(conf.c_ActualInterface)
-		if hola == "2":
-			pass
+
+hola = raw_input("sele>")
+if hola== '1':
+	ListaApAir('wlan0mon')
+if hola == "2":
+	resultado
 
 
 

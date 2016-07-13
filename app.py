@@ -9,6 +9,7 @@ import shutil
 from depen import Dependecias
 from interface import *
 from conf import *
+from spider import ListaApAir2,SelecionAp
 
 FACEJ = False
 
@@ -55,7 +56,7 @@ class myHandler(BaseHTTPRequestHandler):
 
 class Forwaid:
 	def conf(self):
-		if os.path.isfile('/usr/bin/nmcli') and os.path.isfile('/usr/sbin/rfkill'):
+		if os.path.isfile('/usr/bin/nmcli') and os.path.isfile('/usr/sbin/rfkill'):			
 			Popen(['nmcli', 'radio', 'wifi', 'off'],stdout=PIPE,stderr=DN).wait()
 			Popen(['rfkill', 'unblock', 'wlan'],stdout=PIPE,stderr=DN).wait()
 		os.system('ifconfig %s down' % conf.c_ActualInterface)
@@ -267,7 +268,7 @@ def inic():
 		vamos.detenerservicion()
 		vamos.reiniciar()		
 		sys.exit()
-	elif hola == "11":
+	elif hola == "11":		
 		print conf.c_ActualInterface
 		#print FACEJ.resul()		
 	inic()
@@ -275,8 +276,11 @@ def inic():
 def Selecinter():
 	global FACEJ
 	FACEJ = Interfaces()
-	FACEJ.iwconfig() #Selecciona interface	
+	FACEJ.iwconfig() #Selecciona interface
+	#Forwaid().conf()	
+	#Forwaid().detenerservicion()	
+	SelecionAp()
 
-if __name__ == "__main__":
+if __name__ == "__main__":	
 	Selecinter()
 	inic()
